@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KH AI - Admin Panel</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#e0e0e0;font-family:monospace;min-height:100vh;padding:24px}
+.wrap{max-width:700px;margin:0 auto}
+h1{font-size:22px;letter-spacing:.15em;color:#fff;margin-bottom:8px;text-shadow:0 0 12px rgba(255,0,51,.6)}
+.sub{color:#808080;font-size:11px;letter-spacing:.2em;margin-bottom:30px;text-transform:uppercase}
+.tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.tab{padding:10px 18px;background:#0a0a0a;border:1px solid #1e1e1e;border-radius:8px;color:#909090;font-family:monospace;font-size:11px;letter-spacing:.1em;cursor:pointer;white-space:nowrap;transition:.2s}
+.tab:hover{border-color:#8a0d20;color:#ff0033}
+.tab.active{background:#ff0033;color:#000;border-color:#ff0033;font-weight:700}
+.card{background:#0a0a0a;border:1px solid #1e1e1e;border-radius:14px;padding:24px;margin-bottom:16px}
+.card h2{color:#ff0033;font-size:13px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+label{font-size:10px;color:#909090;letter-spacing:.1em;display:block;margin-bottom:6px;margin-top:12px}
+input,select,textarea{width:100%;padding:12px 14px;background:#121212;border:1px solid #222;border-radius:8px;color:#e8e8e8;font-family:monospace;font-size:13px;outline:none;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:#ff0033}
+textarea{resize:vertical;min-height:80px}
+button{width:100%;padding:14px;background:#ff0033;color:#000;border:0;border-radius:10px;font-family:monospace;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;margin-top:20px;box-shadow:0 0 20px rgba(255,0,51,.4);transition:.2s}
+button:hover{box-shadow:0 0 32px rgba(255,0,51,.7)}
+button:active{transform:scale(.98)}
+button:disabled{background:#1e1e1e;color:#666;box-shadow:none;cursor:not-allowed}
+button.danger{background:#8a0d20;color:#fff}
+button.success{background:#00aa55;color:#000}
+button.mini{width:auto;padding:6px 14px;font-size:10px;margin:0}
+.msg{margin-top:14px;font-size:12px;min-height:18px;text-align:center;letter-spacing:.05em}
+.info{background:#050505;border:1px solid #1a1a1a;border-radius:10px;padding:14px;margin-top:14px;font-size:11px;color:#909090;line-height:1.7}
+.info b{color:#ff0033}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat-item{background:#050505;border:1px solid #1a1a1a;border-radius:10px;padding:16px;text-align:center}
+.stat-num{font-size:28px;font-weight:800;color:#ff0033;margin-bottom:6px;text-shadow:0 0 12px rgba(255,0,51,.5)}
+.stat-label{font-size:9px;color:#909090;letter-spacing:.1em;text-transform:uppercase}
+.user-list{max-height:400px;overflow-y:auto;margin-top:16px}
+.user-list::-webkit-scrollbar{width:5px}
+.user-list::-webkit-scrollbar-thumb{background:#1e1e1e;border-radius:5px}
+.user-item{padding:12px;background:#050505;border:1px solid #1a1a1a;border-radius:8px;margin-bottom:6px;font-size:12px;cursor:pointer;transition:.2s}
+.user-item:hover{border-color:#ff0033;background:#0a0a0a}
+.user-item .email{color:#e0e0e0;font-weight:700;margin-bottom:4px;word-break:break-all}
+.user-item .meta{display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:#606060}
+.tier{font-size:9px;padding:3px 8px;border-radius:10px;letter-spacing:.1em;text-transform:uppercase}
+.tier-free{background:#1a1a1a;color:#808080}
+.tier-basic{background:rgba(255,0,51,.15);color:#ff0033}
+.tier-pro{background:rgba(255,0,51,.25);color:#ff3355}
+.tier-ultra{background:#ff0033;color:#000;font-weight:700}
+.admin-badge{background:rgba(0,170,85,.15);color:#00aa55;font-size:9px;padding:3px 8px;border-radius:10px;margin-left:6px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:400;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-box{background:#0a0a0a;border:1px solid #222;border-radius:16px;padding:28px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto}
+.modal-box h3{color:#fff;font-size:16px;letter-spacing:.1em;margin-bottom:14px}
+.modal-box .close{float:right;background:transparent;border:0;color:#909090;font-size:22px;cursor:pointer;width:auto;padding:0;margin:0;box-shadow:none}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.modal-btns button{width:auto;padding:10px 18px;font-size:11px;margin:0}
+.modal-btns .primary{background:#ff0033;color:#000}
+.modal-btns .ghost{background:transparent;border:1px solid #222;color:#909090}
+.detail-row{padding:10px 0;border-bottom:1px solid #1a1a1a;font-size:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+.detail-row .key{color:#909090;flex-shrink:0}
+.detail-row .val{color:#e0e0e0;text-align:right;word-break:break-all}
+.inbox-msg{background:#050505;border-left:3px solid #ff0033;padding:10px;margin-bottom:8px;border-radius:0 8px 8px 0;font-size:12px}
+.inbox-msg .sender{color:#ff0033;font-weight:bold;font-size:11px;margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>KH AI ADMIN</h1>
+<div class="sub">Control Panel</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="dash">Dashboard</div>
+  <div class="tab" data-tab="users">Users</div>
+  <div class="tab" data-tab="aktif">Aktivasi</div>
+  <div class="tab" data-tab="blokir">Blokir</div>
+  <div class="tab" data-tab="admin">Admin</div>
+  <div class="tab" data-tab="broadcast">Broadcast</div>
+  <div class="tab" data-tab="inbox">Inbox</div>
+  <div class="tab" data-tab="log">Log</div>
+</div>
+
+<div id="tab-dash">
+  <div class="card">
+    <h2>Statistik</h2>
+    <div class="stats">
+      <div class="stat-item"><div class="stat-num" id="statTotal">-</div><div class="stat-label">Total User</div></div>
+      <div class="stat-item"><div class="stat-num" id="statPremium">-</div><div class="stat-label">Premium</div></div>
+      <div class="stat-item"><div class="stat-num" id="statActive">-</div><div class="stat-label">Aktif Hari Ini</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat-item"><div class="stat-num" id="statChats">-</div><div class="stat-label">Total Chat</div></div>
+      <div class="stat-item"><div class="stat-num" id="statBlocked">-</div><div class="stat-label">Diblokir</div></div>
+      <div class="stat-item"><div class="stat-num" id="statAdmins">-</div><div class="stat-label">Admin</div></div>
+    </div>
+    <button id="refreshStats">REFRESH DATA</button>
+    <button id="exportBtn" class="success" style="margin-top:8px">EXPORT CSV</button>
+    <div class="msg" id="statMsg"></div>
+  </div>
+</div>
+
+<div id="tab-users" style="display:none">
+  <div class="card">
+    <h2>Daftar User</h2>
+    <input type="text" id="searchUser" placeholder="Cari email...">
+    <div class="user-list" id="userList"><div class="info">Klik Refresh Data dulu.</div></div>
+  </div>
+</div>
+
+<div id="tab-aktif" style="display:none">
+  <div class="card">
+    <h2>Aktivasi User</h2>
+    <label>EMAIL USER</label>
+    <input type="email" id="email" placeholder="user@email.com">
+    <label>TIER</label>
+    <select id="tier">
+      <option value="free">Free - 10 req/hari</option>
+      <option value="basic">Basic - 50 req/hari (Rp 20rb)</option>
+      <option value="pro">Pro - 100 req/hari (Rp 50rb)</option>
+      <option value="ultra">Ultra - 200 req/hari (Rp 150rb)</option>
+    </select>
+    <label>DURASI (HARI)</label>
+    <input type="number" id="days" value="30" min="1">
+    <button id="activateBtn">AKTIFKAN</button>
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<div id="tab-blokir" style="display:none">
+  <div class="card">
+    <h2>Blokir Email</h2>
+    <label>EMAIL YANG DIBLOKIR</label>
+    <input type="email" id="blockEmail" placeholder="spam@mailinator.com">
+    <label>ALASAN (OPSIONAL)</label>
+    <input type="text" id="blockReason" placeholder="Email temporary">
+    <button id="blockBtn">BLOKIR EMAIL</button>
+    <div class="msg" id="blockMsg"></div>
+    <h2 style="margin-top:24px;">Daftar Email Diblokir</h2>
+    <div class="user-list" id="blockedList"><div class="info">Memuat data...</div></div>
+  </div>
+</div>
+
+<div id="tab-admin" style="display:none">
+  <div class="card">
+    <h2>Tambah Admin Baru</h2>
+    <label>EMAIL ADMIN BARU</label>
+    <input type="email" id="newAdminEmail" placeholder="teman@email.com">
+    <label>NAMA ADMIN</label>
+    <input type="text" id="newAdminName" placeholder="Nama teman kamu">
+    <button id="addAdminBtn">TAMBAH ADMIN</button>
+    <div class="msg" id="adminMsg"></div>
+    <h2 style="margin-top:24px;">Daftar Admin</h2>
+    <div class="user-list" id="adminList"><div class="info">Memuat data...</div></div>
+  </div>
+</div>
+
+<div id="tab-broadcast" style="display:none">
+  <div class="card">
+    <h2>Broadcast ke Semua User</h2>
+    <label>JUDUL</label>
+    <input type="text" id="bcTitle" placeholder="Info penting">
+    <label>PESAN</label>
+    <textarea id="bcMessage" placeholder="Tulis pesan buat semua user..."></textarea>
+    <button id="bcBtn">KIRIM BROADCAST</button>
+    <div class="msg" id="bcMsg"></div>
+  </div>
+</div>
+
+<div id="tab-inbox" style="display:none">
+  <div class="card">
+    <h2>Inbox Global Chat</h2>
+    <div id="inboxList" style="max-height:400px;overflow-y:auto">
+      <div class="info">Memuat pesan...</div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-log" style="display:none">
+  <div class="card">
+    <h2>Log Aktivitas Admin</h2>
+    <button id="clearLogBtn" class="danger" style="margin-bottom:16px; margin-top:0;">HAPUS SEMUA LOG</button>
+    <div class="user-list" id="logList"><div class="info">Memuat data...</div></div>
+  </div>
+</div>
+
+</div>
+
+<div class="modal" id="userModal">
+  <div class="modal-box">
+    <button class="close" onclick="document.getElementById('userModal').classList.remove('show')">×</button>
+    <h3>Detail User</h3>
+    <div id="userDetail"></div>
+    <div class="modal-btns">
+      <button class="ghost" onclick="document.getElementById('userModal').classList.remove('show')">Tutup</button>
+      <button class="success mini" id="saveTierBtn">SIMPAN TIER</button>
+      <button class="danger mini" id="resetLimitBtn">RESET LIMIT</button>
+      <button class="danger mini" id="deleteUserBtn">HAPUS USER</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,getDocs,addDoc,onSnapshot,query,orderBy,limit,writeBatch}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const FIREBASE_CONFIG={apiKey:"AIzaSyAPx6XY8CRDrS8sxh00uNjWsymTu8jD95M",authDomain:"khai-b6e18.firebaseapp.com",projectId:"khai-b6e18",storageBucket:"khai-b6e18.firebasestorage.app",messagingSenderId:"903942429337",appId:"1:903942429337:web:9a21b3b38c7bc917be3608"};
+const PRIMARY_ADMIN="uhuystudio.1@gmail.com";
+const TIER_LIMITS={free:10,basic:50,pro:100,ultra:200};
+
+const app=initializeApp(FIREBASE_CONFIG),auth=getAuth(app),db=getFirestore(app);
+let currentAdmin=null,allUsers=[],selectedUser=null,unsubscribeInbox=null;
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    document.querySelectorAll("[id^='tab-']").forEach(x=>x.style.display="none");
+    document.getElementById("tab-"+t.dataset.tab).style.display="block";
+    if(t.dataset.tab==="dash")loadStats();
+    if(t.dataset.tab==="users")loadUsers();
+    if(t.dataset.tab==="blokir")loadBlockedEmails();
+    if(t.dataset.tab==="admin")loadAdmins();
+    if(t.dataset.tab==="log")loadLogs();
+    if(t.dataset.tab==="inbox")loadInbox();
+  };
+});
+
+onAuthStateChanged(auth,async(u)=>{
+  if(!u){window.location.href="login.html";return;}
+  currentAdmin=u;
+  const adminDoc=await getDoc(doc(db,"admins",u.email));
+  const isPrimary=u.email===PRIMARY_ADMIN;
+  const isAdmin=isPrimary||(adminDoc.exists()&&adminDoc.data().active);
+  if(!isAdmin){alert("Akses ditolak.");window.location.href="chat.html";return;}
+  await logAction("LOGIN","Admin login: "+u.email);
+  loadStats();
+});
+
+async function logAction(type,message){
+  try{await addDoc(collection(db,"admin_logs"),{type:type,message:message,admin:currentAdmin?.email||"unknown",createdAt:Date.now()});}catch(e){}
+}
+
+async function loadStats(){
+  const statMsg=document.getElementById("statMsg");
+  statMsg.textContent="Memuat data...";
+  try{
+    const userSnap=await getDocs(collection(db,"users"));
+    let total=0,premium=0,activeToday=0;
+    const now=Date.now(),dayMs=24*60*60*1000;
+    allUsers=[];
+    userSnap.forEach(d=>{total++;const data=d.data();if(data.premium)premium++;if(data.start&&(now-data.start)<dayMs)activeToday++;allUsers.push({email:d.id,...data});});
+    let chats=0;
+    const memSnap=await getDocs(collection(db,"memories"));
+    memSnap.forEach(d=>{chats+=(d.data().chatCount||0);});
+    const blockedSnap=await getDocs(collection(db,"blocked_emails"));
+    const adminSnap=await getDocs(collection(db,"admins"));
+    document.getElementById("statTotal").textContent=total;
+    document.getElementById("statPremium").textContent=premium;
+    document.getElementById("statActive").textContent=activeToday;
+    document.getElementById("statChats").textContent=chats;
+    document.getElementById("statBlocked").textContent=blockedSnap.size;
+    document.getElementById("statAdmins").textContent=adminSnap.size+1;
+    statMsg.textContent="Update: "+new Date().toLocaleTimeString('id-ID');
+    statMsg.style.color="#ff0033";
+  }catch(e){statMsg.textContent="Error: "+e.message;statMsg.style.color="#ff0033";}
+}
+
+document.getElementById("refreshStats").onclick=loadStats;
+
+document.getElementById("exportBtn").onclick=function(){
+  if(!allUsers.length){alert("Refresh data dulu.");return;}
+  let csv="Email,Tier,Premium,Used,Limit\n";
+  allUsers.forEach(u=>{csv+='"'+u.email+'","'+(u.tier||"free")+'","'+(u.premium?"Ya":"Tidak")+'","'+(u.used||0)+'","'+(u.limit||10)+'"\n';});
+  const blob=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="khai_users_"+Date.now()+".csv";a.click();
+};
+
+function loadUsers(){
+  const list=document.getElementById("userList");
+  const search=document.getElementById("searchUser").value.toLowerCase().trim();
+  let filtered=allUsers;
+  if(search)filtered=allUsers.filter(u=>u.email.toLowerCase().includes(search));
+  if(!filtered.length){list.innerHTML='<div class="info">Tidak ada user.</div>';return;}
+  filtered.sort((a,b)=>{if(a.premium&&!b.premium)return -1;if(!a.premium&&b.premium)return 1;return a.email.localeCompare(b.email);});
+  list.innerHTML=filtered.map(u=>`<div class="user-item" onclick="showUserDetail('${u.email}')"><div class="email">${u.email}</div><div class="meta"><span class="tier tier-${u.tier||"free"}">${u.tier||"free"}</span><span>Used: ${u.used||0}</span><span>Limit: ${u.limit||10}</span></div></div>`).join("");
+}
+document.getElementById("searchUser").addEventListener("input",loadUsers);
+
+window.showUserDetail=async function(email){
+  const u=allUsers.find(x=>x.email===email);
+  if(!u)return;
+  selectedUser=email;
+  const memDoc=await getDoc(doc(db,"memories",email));
+  const setDoc_=await getDoc(doc(db,"settings",email)).catch(()=>null);
+  const mem=memDoc.exists()?memDoc.data():{};
+  const set=setDoc_&&setDoc_.exists()?setDoc_.data():{};
+  
+  document.getElementById("userDetail").innerHTML=`
+    <div class="detail-row"><span class="key">Email</span><span class="val">${u.email}</span></div>
+    <div class="detail-row"><span class="key">Tier</span><span class="val">
+      <select id="detailTier" style="width:auto; padding:4px 8px; font-size:11px; margin:0;">
+        <option value="free" ${u.tier==='free'?'selected':''}>Free</option>
+        <option value="basic" ${u.tier==='basic'?'selected':''}>Basic</option>
+        <option value="pro" ${u.tier==='pro'?'selected':''}>Pro</option>
+        <option value="ultra" ${u.tier==='ultra'?'selected':''}>Ultra</option>
+      </select>
+    </span></div>
+    <div class="detail-row"><span class="key">Premium</span><span class="val">${u.premium?"Ya":"Tidak"}</span></div>
+    <div class="detail-row"><span class="key">Used</span><span class="val">${u.used||0} / ${u.limit||10}</span></div>
+    <div class="detail-row"><span class="key">Chat Count</span><span class="val">${mem.chatCount||0}</span></div>
+    <div class="detail-row"><span class="key">Persona</span><span class="val">${set.persona||"default"}</span></div>
+    <div class="detail-row"><span class="key">Nickname</span><span class="val">${set.nickname||"-"}</span></div>
+  `;
+  document.getElementById("userModal").classList.add("show");
+};
+
+document.getElementById("saveTierBtn").onclick = async function() {
+  if(!selectedUser) return;
+  const newTier = document.getElementById("detailTier").value;
+  const limit = TIER_LIMITS[newTier] || 10;
+  const premiumUntil = newTier !== "free" ? Date.now() + (30 * 24 * 60 * 60 * 1000) : 0;
+  
+  this.disabled = true;
+  try {
+    await updateDoc(doc(db, "users", selectedUser), {
+      tier: newTier,
+      limit: limit,
+      premium: newTier !== "free",
+      premiumUntil: premiumUntil
+    });
+    alert("Tier user berhasil diubah ke " + newTier);
+    await logAction("UPDATE_TIER", `Mengubah tier ${selectedUser} menjadi ${newTier}`);
+    loadStats();
+    document.getElementById("userModal").classList.remove("show");
+  } catch(e) {
+    alert("Gagal update tier: " + e.message);
+  }
+  this.disabled = false;
+};
+
+document.getElementById("resetLimitBtn").onclick=async function(){
+  if(!selectedUser)return;
+  if(!confirm("Reset limit "+selectedUser+"?"))return;
+  await updateDoc(doc(db,"users",selectedUser),{used:0,start:Date.now()});
+  alert("Limit direset!");loadStats();
+  document.getElementById("userModal").classList.remove("show");
+};
+
+document.getElementById("deleteUserBtn").onclick=async function(){
+  if(!selectedUser)return;
+  if(!confirm("HAPUS "+selectedUser+"?"))return;
+  await deleteDoc(doc(db,"users",selectedUser));
+  await deleteDoc(doc(db,"memories",selectedUser)).catch(()=>{});
+  await deleteDoc(doc(db,"settings",selectedUser)).catch(()=>{});
+  alert("User dihapus!");loadStats();
+  document.getElementById("userModal").classList.remove("show");
+};
+
+document.getElementById("activateBtn").onclick=async function(){
+  const email=document.getElementById("email").value.trim();
+  const tier=document.getElementById("tier").value;
+  const days=parseInt(document.getElementById("days").value)||30;
+  const msg=document.getElementById("msg");
+  if(!email||email.indexOf("@")===-1){msg.textContent="Email tidak valid.";msg.style.color="#ff0033";return;}
+  this.disabled=true;msg.textContent="Memproses...";
+  try{
+    const userRef=doc(db,"users",email);
+    const userDoc=await getDoc(userRef);
+    const limit=TIER_LIMITS[tier]||10;
+    const premiumUntil=Date.now()+(days*24*60*60*1000);
+    if(!userDoc.exists()){await setDoc(userRef,{email:email,used:0,limit:limit,start:Date.now(),premium:tier!=="free",premiumUntil:tier!=="free"?premiumUntil:0,tier:tier});}
+    else{await updateDoc(userRef,{limit:limit,premium:tier!=="free",premiumUntil:tier!=="free"?premiumUntil:0,tier:tier});}
+    msg.textContent="Berhasil! "+email+" → "+tier.toUpperCase();msg.style.color="#ff0033";
+    document.getElementById("email").value="";
+    await logAction("ACTIVATE", `Aktivasi ${email} ke tier ${tier} selama ${days} hari`);
+    loadStats();
+  }catch(e){msg.textContent="Error: "+e.message;msg.style.color="#ff0033";}
+  this.disabled=false;
+};
+
+document.getElementById("blockBtn").onclick=async function(){
+  const email=document.getElementById("blockEmail").value.trim().toLowerCase();
+  const reason=document.getElementById("blockReason").value.trim()||"Tidak disebutkan";
+  const blockMsg=document.getElementById("blockMsg");
+  if(!email||email.indexOf("@")===-1){blockMsg.textContent="Email tidak valid.";blockMsg.style.color="#ff0033";return;}
+  if(email===PRIMARY_ADMIN){blockMsg.textContent="Gak bisa blokir owner.";blockMsg.style.color="#ff0033";return;}
+  this.disabled=true;blockMsg.textContent="Memblokir...";
+  try{
+    await setDoc(doc(db,"blocked_emails",email),{email:email,reason:reason,blockedAt:Date.now()});
+    blockMsg.textContent="Email "+email+" diblokir.";blockMsg.style.color="#ff0033";
+    document.getElementById("blockEmail").value="";document.getElementById("blockReason").value="";
+    await logAction("BLOCK", `Memblokir email ${email}`);
+    loadBlockedEmails();loadStats();
+  }catch(e){blockMsg.textContent="Error: "+e.message;blockMsg.style.color="#ff0033";}
+  this.disabled=false;
+};
+
+async function loadBlockedEmails(){
+  const list=document.getElementById("blockedList");
+  if(!list)return;
+  list.innerHTML='<div class="info">Loading...</div>';
+  try{
+    const snapshot=await getDocs(collection(db,"blocked_emails"));
+    if(snapshot.empty){list.innerHTML='<div class="info">Belum ada email diblokir.</div>';return;}
+    let html="";
+    snapshot.forEach(d=>{const data=d.data();const date=new Date(data.blockedAt).toLocaleDateString('id-ID');
+      html+=`<div class="user-item"><div class="email">${data.email}</div><div class="meta"><span>${data.reason}</span><span>${date}</span></div><button class="danger mini" style="margin-top:8px" onclick="unblockEmail('${data.email}')">UNBLOCK</button></div>`;});
+    list.innerHTML=html;
+  }catch(e){list.innerHTML='<div class="info">Error: '+e.message+'</div>';}
+}
+
+window.unblockEmail=async function(email){
+  if(!confirm("Unblock "+email+"?"))return;
+  await deleteDoc(doc(db,"blocked_emails",email));
+  await logAction("UNBLOCK", `Membuka blokir email ${email}`);
+  loadBlockedEmails();loadStats();
+};
+
+document.getElementById("addAdminBtn").onclick=async function(){
+  const email=document.getElementById("newAdminEmail").value.trim().toLowerCase();
+  const name=document.getElementById("newAdminName").value.trim();
+  const adminMsg=document.getElementById("adminMsg");
+  if(!email||email.indexOf("@")===-1){adminMsg.textContent="Email tidak valid.";adminMsg.style.color="#ff0033";return;}
+  if(email===PRIMARY_ADMIN){adminMsg.textContent="Ini udah admin utama.";adminMsg.style.color="#ff0033";return;}
+  this.disabled=true;adminMsg.textContent="Menambah...";
+  try{
+    await setDoc(doc(db,"admins",email),{email:email,name:name||"Admin",active:true,addedBy:currentAdmin.email,addedAt:Date.now()});
+    adminMsg.textContent="Admin "+email+" ditambahkan.";adminMsg.style.color="#ff0033";
+    document.getElementById("newAdminEmail").value="";document.getElementById("newAdminName").value="";
+    await logAction("ADD_ADMIN", `Menambahkan admin baru: ${email}`);
+    loadAdmins();
+  }catch(e){adminMsg.textContent="Error: "+e.message;adminMsg.style.color="#ff0033";}
+  this.disabled=false;
+};
+
+async function loadAdmins(){
+  const list=document.getElementById("adminList");
+  if(!list)return;
+  list.innerHTML='<div class="info">Loading...</div>';
+  try{
+    const snapshot=await getDocs(collection(db,"admins"));
+    let html=`<div class="user-item"><div class="email">${PRIMARY_ADMIN} <span class="admin-badge">OWNER</span></div><div class="meta"><span>Admin Utama</span></div></div>`;
+    snapshot.forEach(d=>{const data=d.data();
+      html+=`<div class="user-item"><div class="email">${data.email} <span class="admin-badge">ADMIN</span></div><div class="meta"><span>${data.name}</span></div><button class="danger mini" style="margin-top:8px" onclick="removeAdmin('${data.email}')">HAPUS ADMIN</button></div>`;});
+    list.innerHTML=html;
+  }catch(e){list.innerHTML='<div class="info">Error: '+e.message+'</div>';}
+}
+
+window.removeAdmin=async function(email){
+  if(!confirm("Hapus admin "+email+"?"))return;
+  await deleteDoc(doc(db,"admins",email));
+  await logAction("REMOVE_ADMIN", `Menghapus admin: ${email}`);
+  loadAdmins();
+};
+
+document.getElementById("bcBtn").onclick=async function(){
+  const title=document.getElementById("bcTitle").value.trim();
+  const message=document.getElementById("bcMessage").value.trim();
+  const bcMsg=document.getElementById("bcMsg");
+  if(!title||!message){bcMsg.textContent="Judul dan pesan wajib diisi.";bcMsg.style.color="#ff0033";return;}
+  this.disabled=true;bcMsg.textContent="Mengirim...";
+  try{
+    await addDoc(collection(db,"broadcasts"),{title:title,message:message,admin:currentAdmin.email,createdAt:Date.now()});
+    bcMsg.textContent="Broadcast terkirim ke "+allUsers.length+" user.";bcMsg.style.color="#ff0033";
+    document.getElementById("bcTitle").value="";document.getElementById("bcMessage").value="";
+    await logAction("BROADCAST", `Mengirim broadcast: ${title}`);
+  }catch(e){bcMsg.textContent="Error: "+e.message;bcMsg.style.color="#ff0033";}
+  this.disabled=false;
+};
+
+function loadInbox(){
+  const list=document.getElementById("inboxList");
+  if(!list)return;
+  if(unsubscribeInbox)unsubscribeInbox();
+  list.innerHTML='<div class="info">Mendengarkan pesan...</div>';
+  
+  const q=query(collection(db,"globalChat"),orderBy("createdAt","desc"),limit(20));
+  unsubscribeInbox=onSnapshot(q,(snapshot)=>{
+    if(snapshot.empty){list.innerHTML='<div class="info">Belum ada pesan di Global Chat.</div>';return;}
+    list.innerHTML="";
+    snapshot.forEach(doc=>{
+      const m=doc.data();
+      let time = '';
+      if(m.createdAt) {
+        const date = m.createdAt.toDate ? m.createdAt.toDate() : new Date(m.createdAt);
+        time = date.toLocaleTimeString('id-ID');
+      }
+      const item=document.createElement("div");
+      item.className="inbox-msg";
+      item.innerHTML=`<div class="sender">${m.nickname || m.email} (${m.email}) • ${time}</div><div>${m.text}</div>`;
+      list.appendChild(item);
+    });
+  },(error)=>{
+    list.innerHTML='<div class="info" style="color:#ff0033">Error: '+error.message+'</div>';
+  });
+}
+
+async function loadLogs(){
+  const list=document.getElementById("logList");
+  if(!list)return;
+  list.innerHTML='<div class="info">Loading...</div>';
+  try{
+    const snapshot=await getDocs(collection(db,"admin_logs"));
+    if(snapshot.empty){list.innerHTML='<div class="info">Belum ada log.</div>';return;}
+    const logs=[];
+    snapshot.forEach(d=>logs.push(d.data()));
+    logs.sort((a,b)=>b.createdAt-a.createdAt);
+    list.innerHTML=logs.slice(0,50).map(l=>`<div class="user-item"><div class="email">[${l.type}] ${l.message}</div><div class="meta"><span>${l.admin}</span><span>${new Date(l.createdAt).toLocaleString('id-ID')}</span></div></div>`).join("");
+  }catch(e){list.innerHTML='<div class="info">Error: '+e.message+'</div>';}
+}
+
+document.getElementById("clearLogBtn").onclick = async function() {
+  if(!confirm("Hapus semua log aktivitas? Tindakan ini tidak bisa dibatalkan.")) return;
+  this.disabled = true;
+  try {
+    const snap = await getDocs(collection(db, "admin_logs"));
+    const batch = writeBatch(db);
+    snap.forEach(d => { batch.delete(d.ref); });
+    await batch.commit();
+    alert("Log dibersihkan!"); 
+    loadLogs();
+  } catch(e) {
+    alert("Gagal menghapus log: " + e.message);
+  }
+  this.disabled = false;
+};
+</script>
+</body>
+</html>
