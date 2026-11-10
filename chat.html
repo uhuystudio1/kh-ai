@@ -9,7 +9,7 @@
 :root {
   --neon: #ff0033;
   --neon-dim: #8a001b;
-  --neon-glow: rgba(255, 0, 51, 0.6); /* Untuk pantulan Floating AI */
+  --neon-glow: rgba(255, 0, 51, 0.6);
   --bg: #000000;
   --bg-soft: #0a0a0a;
   --bg-card: #111111;
@@ -20,7 +20,6 @@
   --radius: 10px;
   --font: 'Courier New', 'Consolas', 'Monaco', monospace;
 }
-
 body.light-mode {
   --bg: #f5f5f5;
   --bg-soft: #ffffff;
@@ -30,20 +29,16 @@ body.light-mode {
   --text-dim: #666666;
   --border: #cccccc;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; }
-
 button { font-family: var(--font); cursor: pointer; border: none; background: none; color: var(--text); font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 input, textarea { font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; outline: none; transition: border-color 0.2s, background 0.3s; width: 100%; }
 input:focus, textarea:focus { border-color: var(--neon); }
-
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--neon-dim); }
-
 #app { display: flex; height: 100%; width: 100%; position: relative; }
 
 /* SIDEBAR */
@@ -81,53 +76,55 @@ input:focus, textarea:focus { border-color: var(--neon); }
 .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 #topbar-title { font-size: 13px; font-weight: bold; color: var(--neon); letter-spacing: 1px; flex-shrink: 0; }
 
-/* CUSTOM DROPDOWN (Model & Bahasa) */
+/* CUSTOM DROPDOWN MODEL */
 .custom-dropdown { position: relative; flex: 1; min-width: 0; }
 .dropdown-selected { background: var(--bg-input); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
 .dropdown-selected:hover { border-color: var(--neon); }
 .dropdown-selected::after { content: "▼"; font-size: 8px; color: var(--text-dim); }
-.dropdown-menu { display: none; position: fixed; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; min-width: 140px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.8); flex-direction: column; }
+.dropdown-menu { display: none; position: fixed; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; min-width: 160px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.8); flex-direction: column; max-height: 300px; overflow-y: auto; }
 .dropdown-menu.show { display: flex; }
-.dropdown-item { padding: 10px 12px; color: var(--text); cursor: pointer; font-size: 12px; display: flex; justify-content: flex-start; }
+.dropdown-item { padding: 10px 12px; color: var(--text); cursor: pointer; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
 .dropdown-item:hover { background: var(--bg-card); color: var(--neon); }
 .dropdown-item.active { color: var(--neon); font-weight: bold; background: rgba(255,0,51,0.1); }
+.model-lock { font-size: 9px; color: #ff0033; border: 1px solid #ff0033; padding: 2px 6px; border-radius: 4px; background: rgba(255,0,51,0.1); margin-left: 8px; }
 
-/* VIEWS & CHAT */
+/* CHAT AREA */
 #chat-messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px 12px 8px; display: flex; flex-direction: column; gap: 12px; min-height: 0; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 .msg { max-width: 88%; padding: 10px 14px; border-radius: 12px; line-height: 1.55; font-size: 13.5px; word-break: break-word; white-space: pre-wrap; animation: msgIn 0.3s ease both; position: relative; }
 @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .msg.user { align-self: flex-end; background: var(--bg-card); border: 1px solid var(--border); border-bottom-right-radius: 4px; color: var(--text); }
 .msg.ai { align-self: flex-start; background: var(--bg-soft); border: 1px solid var(--border); border-bottom-left-radius: 4px; width: 88%; }
 
-/* QUIZ */
+/* MODAL UPGRADE */
+#modal-upgrade { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+#modal-upgrade.show { display: flex; }
+.upgrade-box { background: var(--bg-soft); border: 1px solid var(--neon); border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 0 30px rgba(255,0,51,0.3); }
+.upgrade-box h3 { color: var(--neon); font-size: 16px; margin-bottom: 12px; letter-spacing: 1px; }
+.upgrade-box p { font-size: 13px; color: var(--text); margin-bottom: 20px; line-height: 1.6; }
+.upgrade-btn { width: 100%; padding: 12px; background: var(--neon); color: #fff; border-radius: 10px; font-weight: bold; font-size: 13px; margin-bottom: 10px; text-decoration: none; display: block; }
+.upgrade-btn:hover { filter: brightness(1.2); }
+.upgrade-cancel { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); color: var(--text-dim); border-radius: 10px; font-size: 13px; }
+
+/* QUIZ, THINK, DLL */
 .msg.quiz { background: var(--bg-soft); border: 1px solid var(--neon); width: 88%; }
 .msg .quiz-question { color: var(--text); font-weight: bold; margin-bottom: 10px; }
 .msg .quiz-options { display: flex; flex-direction: column; gap: 6px; }
-.msg .quiz-opt { background: var(--bg-input); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 8px; text-align: left; font-size: 12.5px; transition: all 0.15s; justify-content: flex-start; }
+.msg .quiz-opt { background: var(--bg-input); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 8px; text-align: left; font-size: 12.5px; justify-content: flex-start; }
 .msg .quiz-opt:hover { border-color: var(--neon); }
 .msg .quiz-opt.correct { background: rgba(0, 170, 85, 0.15); border-color: #00aa55; color: #00aa55; }
 .msg .quiz-opt.wrong { background: rgba(255, 0, 51, 0.15); border-color: var(--neon); color: var(--neon); }
-
-/* BERPIKIR (DEEP THINKING) */
 .think-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; font-size: 12px; }
-.think-header { padding: 8px 12px; background: var(--bg-card); cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); transition: color 0.15s; }
-.think-header:hover { color: var(--neon); }
-.think-content { padding: 10px 12px; display: none; color: var(--text-dim); border-top: 1px solid var(--border); font-style: italic; line-height: 1.5; }
+.think-header { padding: 8px 12px; background: var(--bg-card); cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); }
+.think-content { padding: 10px 12px; display: none; color: var(--text-dim); border-top: 1px solid var(--border); font-style: italic; }
 .think-box.open .think-content { display: block; }
-
-/* WEB SOURCES */
 .sources-container { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
-.src-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 11px; color: var(--text-dim); cursor: pointer; transition: all 0.2s; justify-content: flex-start; }
-.src-badge:hover { border-color: var(--neon); color: var(--neon); }
+.src-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 11px; color: var(--text-dim); cursor: pointer; }
 .src-badge svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
 .src-list { display: none; flex-direction: column; gap: 8px; margin-top: 10px; width: 100%; }
 .src-list.show { display: flex; }
-.src-item { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-decoration: none; display: block; transition: border-color 0.2s; }
-.src-item:hover { border-color: var(--border); }
+.src-item { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-decoration: none; display: block; }
 .src-item .s-title { color: var(--text); font-weight: bold; margin-bottom: 4px; font-size: 12.5px; }
 .src-item .s-url { color: var(--text-dim); font-size: 10px; word-break: break-all; }
-
-/* ZIP FILE CARD */
 .zip-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; display: flex; align-items: center; gap: 12px; }
 .zip-icon { width: 36px; height: 36px; background: var(--bg-card); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .zip-icon svg { width: 20px; height: 20px; stroke: var(--neon); fill: none; stroke-width: 2; }
@@ -138,126 +135,69 @@ input:focus, textarea:focus { border-color: var(--neon); }
 .zip-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); }
 .zip-btn:hover { border-color: var(--neon); color: var(--neon); }
 .zip-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-/* TTS BUTTON */
-.tts-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; font-size: 11px; color: var(--text-dim); cursor: pointer; transition: all 0.2s; }
-.tts-btn:hover { border-color: var(--neon); color: var(--neon); }
+.tts-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 4px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; font-size: 11px; color: var(--text-dim); cursor: pointer; }
 .tts-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-/* LIVE PREVIEW */
 .live-preview { margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; }
 .live-preview iframe { width: 100%; height: 200px; border: none; display: block; }
 
-/* HERO */
+/* HERO & COMPOSER */
 #hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; gap: 16px; }
 #hero.hidden { display: none; }
 #hero svg.logo { width: 90px; height: 90px; }
-#hero h1 { font-size: 20px; color: var(--text); font-weight: 600; letter-spacing: 0.5px; line-height: 1.4; }
+#hero h1 { font-size: 20px; color: var(--text); font-weight: 600; line-height: 1.4; }
 #hero p { font-size: 12px; color: var(--text-dim); max-width: 320px; }
 .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; max-width: 400px; }
-.hero-chip { background: var(--bg-card); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-size: 12px; color: var(--text); transition: all 0.15s; justify-content: center; }
+.hero-chip { background: var(--bg-card); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-size: 12px; color: var(--text); justify-content: center; }
 .hero-chip:hover { border-color: var(--neon); color: var(--neon); }
-
-/* COMPOSER */
 #composer { flex-shrink: 0; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: var(--bg-soft); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
-.composer-row { display: flex; align-items: flex-end; gap: 6px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 22px; padding: 6px 6px 6px 14px; transition: border-color 0.2s; }
+.composer-row { display: flex; align-items: flex-end; gap: 6px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 22px; padding: 6px 6px 6px 14px; }
 .composer-row:focus-within { border-color: var(--neon); }
-#chat-input { flex: 1; background: transparent; border: none; resize: none; padding: 8px 0; font-size: 14px; line-height: 1.4; max-height: 120px; min-height: 24px; overflow-y: auto; color: var(--text); }
+#chat-input { flex: 1; background: transparent; border: none; resize: none; padding: 8px 0; font-size: 14px; max-height: 120px; min-height: 24px; overflow-y: auto; color: var(--text); }
 #chat-input:focus { outline: none; }
 .composer-actions { display: flex; align-items: center; gap: 4px; }
-.composer-btn { width: 34px; height: 34px; border-radius: 50%; color: var(--text-dim); transition: all 0.15s; flex-shrink: 0; }
+.composer-btn { width: 34px; height: 34px; border-radius: 50%; color: var(--text-dim); }
 .composer-btn:hover, .composer-btn.active { background: var(--bg-card); color: var(--neon); }
 .composer-btn.active { border: 1px solid var(--neon); background: rgba(255,0,51,0.1); }
 .composer-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-#send-btn { background: var(--neon); color: #fff; width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; transition: all 0.15s; }
-#send-btn:hover:not(:disabled) { filter: brightness(1.2); }
+#send-btn { background: var(--neon); color: #fff; width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
 #send-btn:disabled { background: var(--border); color: var(--text-dim); }
 #send-btn svg { width: 16px; height: 16px; fill: currentColor; }
 .composer-meta { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-dim); padding: 0 8px; }
 #persona-indicator { display: none; align-items: center; gap: 6px; padding: 3px 8px; background: rgba(255,0,51,0.1); border: 1px solid var(--neon-dim); border-radius: 12px; font-size: 10px; color: var(--neon); }
 #persona-indicator.show { display: inline-flex; }
 
-/* MODAL & UI SETTINGS */
+/* MODALS UMUM */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
 .modal.show { display: flex; }
-.modal-box { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; animation: modalIn 0.25s ease; }
-@keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-box { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .modal-title { font-size: 14px; font-weight: bold; color: var(--text); letter-spacing: 1px; }
 .modal-close { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border); color: var(--text-dim); }
 .modal-close:hover { border-color: var(--neon); color: var(--neon); }
 .modal-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 .modal-content { flex: 1; overflow-y: auto; padding: 10px 0; }
-
-/* SETTINGS LIST UI */
-.setting-item { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.setting-item { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; }
 .setting-item:hover { background: var(--bg-card); }
-.setting-item:last-child { border-bottom: none; }
-.setting-item svg { width: 20px; height: 20px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.setting-item svg { width: 20px; height: 20px; stroke: var(--text); fill: none; stroke-width: 2; flex-shrink: 0; }
 .setting-item .s-text { flex: 1; font-size: 13.5px; font-weight: 500; color: var(--text); }
 .setting-item .s-desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-.setting-item .s-arrow { color: var(--text-dim); font-size: 12px; }
-
-/* SUB-VIEW SETTINGS */
 .sub-view { display: none; padding: 20px; }
 .sub-view.active { display: block; }
 .form-group { margin-bottom: 14px; }
 .form-label { display: block; font-size: 11px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
 .persona-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-.persona-card { padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; text-align: left; transition: all 0.15s; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; }
-.persona-card:hover { border-color: var(--neon); }
+.persona-card { padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; text-align: left; display: flex; flex-direction: column; align-items: flex-start; }
 .persona-card.active { border-color: var(--neon); background: rgba(255,0,51,0.08); }
-.persona-card .p-name { font-size: 12px; font-weight: bold; color: var(--text); margin-bottom: 4px; }
-.persona-card .p-desc { font-size: 10px; color: var(--text-dim); line-height: 1.3; }
+.persona-card .p-name { font-size: 12px; font-weight: bold; color: var(--text); }
 .persona-card.active .p-name { color: var(--neon); }
-.btn-primary { width: 100%; padding: 12px; background: var(--neon); color: #fff; border-radius: 10px; font-weight: bold; font-size: 13px; letter-spacing: 1px; margin-top: 10px; }
-.btn-primary:hover { filter: brightness(1.2); }
-
-/* CREDIT BAR */
+.btn-primary { width: 100%; padding: 12px; background: var(--neon); color: #fff; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 10px; }
 .credit-bar-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
-.credit-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
-.credit-tier { font-size: 12px; font-weight: bold; color: var(--neon); text-transform: uppercase; letter-spacing: 1px; }
-.credit-numbers { font-size: 11px; color: var(--text-dim); }
-.credit-numbers b { color: var(--text); }
-.credit-bar-bg { width: 100%; height: 12px; background: var(--bg-input); border-radius: 6px; overflow: hidden; position: relative; border: 1px solid var(--border); }
-.credit-bar-fill { height: 100%; background: var(--neon); width: 0%; transition: width 0.5s ease; position: relative; overflow: hidden; border-radius: 5px; }
-.credit-bar-loading { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: loadingBar 1.5s infinite linear; display: none; }
-.credit-bar-fill.not-full .credit-bar-loading { display: block; }
-@keyframes loadingBar { 0% { left: -100%; } 100% { left: 100%; } }
-
-/* GLOBAL CHAT */
-#global-chat-box { flex: 1; overflow-y: auto; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; min-height: 250px; max-height: 50vh; }
-.gc-msg { padding: 6px 10px; background: var(--bg-card); border-radius: 8px; font-size: 12px; line-height: 1.4; }
-.gc-msg .gc-name { color: var(--neon); font-size: 10px; margin-bottom: 2px; font-weight: bold; }
-.gc-msg .gc-text { color: var(--text); word-break: break-word; }
-.gc-input-row { display: flex; gap: 8px; }
-.gc-input-row input { flex: 1; }
-.gc-input-row button { padding: 0 16px; background: var(--neon); color: #fff; border-radius: var(--radius); font-weight: bold; }
-
-/* FLOATING AI (Dinamis Glow) */
-#floating-ai { position: fixed; bottom: 100px; right: 16px; width: 52px; height: 52px; background: var(--bg-soft); border: 2px solid var(--neon); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: move; box-shadow: 0 0 20px var(--neon-glow); z-index: 2147483647; touch-action: none; user-select: none; -webkit-user-select: none; transition: box-shadow 0.3s, transform 0.2s; }
-#floating-ai:hover { box-shadow: 0 0 35px var(--neon-glow); transform: scale(1.05); }
+.credit-bar-bg { width: 100%; height: 12px; background: var(--bg-input); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+.credit-bar-fill { height: 100%; background: var(--neon); width: 0%; transition: width 0.5s ease; }
+#floating-ai { position: fixed; bottom: 100px; right: 16px; width: 52px; height: 52px; background: var(--bg-soft); border: 2px solid var(--neon); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: move; box-shadow: 0 0 20px var(--neon-glow); z-index: 2147483647; touch-action: none; }
 #floating-ai svg { width: 28px; height: 28px; pointer-events: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); stroke: var(--neon); fill: none; stroke-width: 1.5; }
-
-/* TOAST */
-#toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-card); border: 1px solid var(--neon); color: var(--text); padding: 10px 18px; border-radius: 20px; font-size: 12px; z-index: 2147483647; opacity: 0; pointer-events: none; transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+#toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-card); border: 1px solid var(--neon); color: var(--text); padding: 10px 18px; border-radius: 20px; font-size: 12px; z-index: 2147483647; opacity: 0; pointer-events: none; transition: all 0.3s; }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ONBOARDING */
-#onboarding { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; }
-#onboarding.show { display: flex; }
-.onboarding-box { background: var(--bg-soft); border: 1px solid var(--neon); border-radius: 16px; padding: 30px 20px; max-width: 400px; text-align: center; }
-.onboarding-box h2 { color: var(--neon); margin-bottom: 10px; }
-.onboarding-box p { font-size: 13px; color: var(--text); line-height: 1.6; margin-bottom: 20px; }
-
-/* CUSTOM SELECT UNTUK BAHASA */
-.custom-select-wrapper { position: relative; }
-.custom-select-trigger { background: var(--bg-input); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: var(--radius); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-.custom-select-trigger:hover { border-color: var(--neon); }
-.custom-select-options { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); margin-top: 4px; z-index: 1000; flex-direction: column; overflow: hidden; }
-.custom-select-wrapper.open .custom-select-options { display: flex; }
-.custom-select-option { padding: 10px 12px; cursor: pointer; font-size: 13px; }
-.custom-select-option:hover { background: var(--bg-card); color: var(--neon); }
 </style>
 </head>
 <body>
@@ -272,7 +212,7 @@ input:focus, textarea:focus { border-color: var(--neon); }
         <div class="sidebar-title">KH AI</div>
         <div class="sidebar-sub">STUDIO v5.1</div>
       </div>
-      <button class="sidebar-close" id="sidebar-close" aria-label="Tutup"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="sidebar-close" id="sidebar-close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="sidebar-scroll">
       <div class="sidebar-section">
@@ -282,9 +222,7 @@ input:focus, textarea:focus { border-color: var(--neon); }
       </div>
       <div class="sidebar-section">
         <div class="sidebar-section-title">Riwayat Chat</div>
-        <div id="chat-history-list">
-          <div style="font-size:11px;color:var(--text-dim);padding:10px;">Belum ada riwayat.</div>
-        </div>
+        <div id="chat-history-list"><div style="font-size:11px;color:var(--text-dim);padding:10px;">Belum ada riwayat.</div></div>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-section-title">Persona</div>
@@ -304,28 +242,24 @@ input:focus, textarea:focus { border-color: var(--neon); }
 
   <div id="main">
     <div id="topbar">
-      <button class="icon-btn" id="btn-menu" aria-label="Menu">
-        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-      </button>
+      <button class="icon-btn" id="btn-menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <div id="topbar-title">KH AI</div>
       
       <div class="custom-dropdown" id="dropdown-container">
-        <div class="dropdown-selected" id="dropdown-selected">KH Ultra 1.0</div>
+        <div class="dropdown-selected" id="dropdown-selected">KH-1 (Free)</div>
         <div class="dropdown-menu" id="dropdown-menu">
-          <div class="dropdown-item" data-val="KH-1">KH-1</div>
-          <div class="dropdown-item" data-val="KH-2">KH-2</div>
-          <div class="dropdown-item" data-val="KH 1.0">KH 1.0</div>
-          <div class="dropdown-item" data-val="KH 1.5">KH 1.5</div>
-          <div class="dropdown-item" data-val="KH Plus 1.0">KH Plus 1.0</div>
-          <div class="dropdown-item" data-val="KH Pro 1.0">KH Pro 1.0</div>
-          <div class="dropdown-item active" data-val="KH Ultra 1.0">KH Ultra 1.0</div>
+          <div class="dropdown-item active" data-val="KH-1">KH-1 <span class="model-lock" style="color:#666;border-color:#666;">Free</span></div>
+          <div class="dropdown-item" data-val="KH-2">KH-2 <span class="model-lock" style="color:#666;border-color:#666;">Free</span></div>
+          <div class="dropdown-item" data-val="KH 1.0">KH 1.0 <span class="model-lock">Basic+</span></div>
+          <div class="dropdown-item" data-val="KH 1.5">KH 1.5 <span class="model-lock">Basic+</span></div>
+          <div class="dropdown-item" data-val="KH Plus 1.0">KH Plus 1.0 <span class="model-lock">Pro+</span></div>
+          <div class="dropdown-item" data-val="KH Pro 1.0">KH Pro 1.0 <span class="model-lock">Pro+</span></div>
+          <div class="dropdown-item" data-val="KH Ultra 1.0">KH Ultra 1.0 <span class="model-lock">Ultra</span></div>
         </div>
       </div>
-      <select id="model-select" style="display:none;"><option value="KH Ultra 1.0">KH Ultra 1.0</option></select>
+      <select id="model-select" style="display:none;"><option value="KH-1">KH-1</option></select>
 
-      <button class="icon-btn" id="btn-settings-top" aria-label="Settings">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
+      <button class="icon-btn" id="btn-settings-top"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
 
     <div id="hero">
@@ -333,7 +267,6 @@ input:focus, textarea:focus { border-color: var(--neon); }
         <defs><filter id="neonGlow"><feGaussianBlur stdDeviation="1.5" result="b1"/><feGaussianBlur stdDeviation="3" result="b2"/><feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
         <g filter="url(#neonGlow)"><polygon points="50,8 86.4,29 86.4,71 50,92 13.6,71 13.6,29" fill="none" stroke="var(--neon)" stroke-width="1.8"/><path d="M50 25 L50 75 M30 37 L70 63 M70 37 L30 63" stroke="var(--neon)" stroke-width="1.4" stroke-linecap="round"/></g>
         <circle cx="50" cy="50" r="3" fill="var(--neon)" filter="url(#neonGlow)"/>
-        <circle cx="30" cy="37" r="2" fill="var(--neon)"/><circle cx="70" cy="37" r="2" fill="var(--neon)"/><circle cx="30" cy="63" r="2" fill="var(--neon)"/><circle cx="70" cy="63" r="2" fill="var(--neon)"/><circle cx="50" cy="25" r="2" fill="var(--neon)"/><circle cx="50" cy="75" r="2" fill="var(--neon)"/>
       </svg>
       <h1 id="hero-greeting">Selamat datang di KH AI</h1>
       <p>Tanya apa saja, minta kuis, atau ubah persona. Semua fitur dalam satu tempat.</p>
@@ -351,92 +284,46 @@ input:focus, textarea:focus { border-color: var(--neon); }
       <div class="composer-row">
         <textarea id="chat-input" rows="1" placeholder="Tanya KH AI..."></textarea>
         <div class="composer-actions">
-          <button class="composer-btn" id="btn-think" title="Deep Thinking">
-            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="4"/></svg>
-          </button>
-          <button class="composer-btn" id="btn-search" title="Web Search">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </button>
-          <button class="composer-btn" id="btn-mic" title="Voice Input">
-            <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
-          </button>
-          <button class="composer-btn" id="btn-upload" title="Upload File">
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          </button>
+          <button class="composer-btn" id="btn-think" title="Deep Thinking"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="4"/></svg></button>
+          <button class="composer-btn" id="btn-search" title="Web Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+          <button class="composer-btn" id="btn-mic" title="Voice Input"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></button>
+          <button class="composer-btn" id="btn-upload" title="Upload File"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
           <input type="file" id="file-input" style="display:none">
-          <button id="send-btn" disabled>
-            <svg viewBox="0 0 24 24"><path d="M3 20.5L21 12 3 3.5 3 10l12 2-12 2z"/></svg>
-          </button>
+          <button id="send-btn" disabled><svg viewBox="0 0 24 24"><path d="M3 20.5L21 12 3 3.5 3 10l12 2-12 2z"/></svg></button>
         </div>
       </div>
-      <div class="composer-meta">
-        <span id="persona-indicator"></span>
-      </div>
+      <div class="composer-meta"><span id="persona-indicator"></span></div>
     </div>
   </div>
 </div>
 
-<div id="floating-ai">
-  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="4"/></svg>
-</div>
+<div id="floating-ai"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="4"/></svg></div>
 <div id="toast"></div>
 
-<div id="onboarding">
-  <div class="onboarding-box">
-    <h2>Selamat Datang di KH AI</h2>
-    <p>AI pintar yang bisa bantu kamu ngoding, bikin kuis, bikin game Godot, dan banyak lagi. Ada menu <b>Settings</b> di pojok kanan atas untuk atur persona, tema, dan plugin.</p>
-    <button class="btn-primary" onclick="document.getElementById('onboarding').classList.remove('show'); localStorage.setItem('kh_onboard','1')">MULAI</button>
+<div id="modal-upgrade">
+  <div class="upgrade-box">
+    <h3 id="upgrade-title">Model Terkunci</h3>
+    <p id="upgrade-desc">Model ini membutuhkan tier yang lebih tinggi. Silakan hubungi Admin untuk upgrade.</p>
+    <a href="#" id="upgrade-wa-btn" class="upgrade-btn" target="_blank">HUBUNGI ADMIN VIA WA</a>
+    <button class="upgrade-cancel" onclick="document.getElementById('modal-upgrade').classList.remove('show')">TUTUP</button>
   </div>
 </div>
 
 <div class="modal" id="modal-settings">
   <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title" id="settings-title">PENGATURAN</div>
-      <button class="modal-close" id="btn-settings-back" style="display:none;" onclick="switchSettingsView('main')"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <button class="modal-close" id="btn-settings-close" onclick="closeSettings()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    </div>
-    
+    <div class="modal-header"><div class="modal-title" id="settings-title">PENGATURAN</div><button class="modal-close" id="btn-settings-back" style="display:none;" onclick="switchSettingsView('main')"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><button class="modal-close" id="btn-settings-close" onclick="closeSettings()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
     <div class="modal-content">
       <div class="sub-view active" id="sv-main">
-        <div class="setting-item" onclick="switchSettingsView('tier')">
-          <svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z"/></svg>
-          <div class="s-text">Tier & Kredit<div class="s-desc">Lihat sisa kredit dan paket kamu</div></div>
-          <div class="s-arrow">›</div>
-        </div>
-        <div class="setting-item" onclick="switchSettingsView('personalisasi')">
-          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <div class="s-text">Personalisasi<div class="s-desc">Nama panggilan & Persona AI</div></div>
-          <div class="s-arrow">›</div>
-        </div>
-        <div class="setting-item" onclick="switchSettingsView('memori')">
-          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <div class="s-text">Memori<div class="s-desc">Apa yang AI ingat tentangmu</div></div>
-          <div class="s-arrow">›</div>
-        </div>
-        <div class="setting-item" onclick="switchSettingsView('plugin')">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          <div class="s-text">Plugin (MCP)<div class="s-desc">Hubungkan alat luar (Higgsfield, dll)</div></div>
-          <div class="s-arrow">›</div>
-        </div>
-        <div class="setting-item" onclick="switchSettingsView('tampilan')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <div class="s-text">Tampilan & Bahasa<div class="s-desc">Tema, Warna Aksen, Bahasa</div></div>
-          <div class="s-arrow">›</div>
-        </div>
+        <div class="setting-item" onclick="switchSettingsView('tier')"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z"/></svg><div class="s-text">Tier & Kredit<div class="s-desc">Lihat sisa kredit dan paket kamu</div></div><div class="s-arrow">›</div></div>
+        <div class="setting-item" onclick="switchSettingsView('personalisasi')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><div class="s-text">Personalisasi<div class="s-desc">Nama panggilan & Persona AI</div></div><div class="s-arrow">›</div></div>
+        <div class="setting-item" onclick="switchSettingsView('memori')"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><div class="s-text">Memori<div class="s-desc">Apa yang AI ingat tentangmu</div></div><div class="s-arrow">›</div></div>
+        <div class="setting-item" onclick="switchSettingsView('plugin')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><div class="s-text">Plugin (MCP)<div class="s-desc">Hubungkan alat luar (Higgsfield, dll)</div></div><div class="s-arrow">›</div></div>
+        <div class="setting-item" onclick="switchSettingsView('tampilan')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><div class="s-text">Tampilan & Bahasa<div class="s-desc">Tema, Warna Aksen, Bahasa</div></div><div class="s-arrow">›</div></div>
       </div>
-
       <div class="sub-view" id="sv-tier">
         <div class="credit-bar-container">
-          <div class="credit-header">
-            <div class="credit-tier" id="credit-tier-text">FREE TIER</div>
-            <div class="credit-numbers"><b id="credit-used">0</b> / <span id="credit-limit">100</span> Terpakai</div>
-          </div>
-          <div class="credit-bar-bg">
-            <div class="credit-bar-fill" id="credit-bar-fill">
-              <div class="credit-bar-loading"></div>
-            </div>
-          </div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;"><div style="font-size:12px; font-weight:bold; color:var(--neon);" id="credit-tier-text">FREE TIER</div><div style="font-size:11px; color:var(--text-dim);"><b id="credit-used">0</b> / <span id="credit-limit">100</span> Terpakai</div></div>
+          <div class="credit-bar-bg"><div class="credit-bar-fill" id="credit-bar-fill"></div></div>
           <div style="font-size:10px;color:var(--text-dim);margin-top:8px;text-align:center;" id="credit-status">Sisa Kredit: 100</div>
         </div>
         <div style="background:var(--bg-card);padding:16px;border-radius:12px;border:1px solid var(--border);text-align:center;">
@@ -445,79 +332,23 @@ input:focus, textarea:focus { border-color: var(--neon); }
           <button class="btn-primary" onclick="upgradeWA()">UPGRADE SEKARANG</button>
         </div>
       </div>
-
       <div class="sub-view" id="sv-personalisasi">
-        <div class="form-group">
-          <label class="form-label">Nama Panggilan</label>
-          <input type="text" id="set-nickname" placeholder="Nama kamu">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Persona Default</label>
-          <div class="persona-grid" id="persona-grid">
-            <button class="persona-card" data-persona="default"><div class="p-name">Default</div><div class="p-desc">Asisten netral</div></button>
-            <button class="persona-card" data-persona="guru"><div class="p-name">Guru Killer</div><div class="p-desc">Disiplin, tegas</div></button>
-            <button class="persona-card" data-persona="pirate"><div class="p-name">Bajak Laut</div><div class="p-desc">Arrr! Harta karun</div></button>
-            <button class="persona-card" data-persona="detektif"><div class="p-name">Detektif</div><div class="p-desc">Analitis, skeptis</div></button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Instruksi Kustom (Skill AI)</label>
-          <textarea id="set-custom-prompt" rows="3" placeholder="Contoh: Selalu jawab pakai bahasa Jawa halus..."></textarea>
-        </div>
+        <div class="form-group"><label class="form-label">Nama Panggilan</label><input type="text" id="set-nickname" placeholder="Nama kamu"></div>
+        <div class="form-group"><label class="form-label">Persona Default</label><div class="persona-grid" id="persona-grid">
+          <button class="persona-card" data-persona="default"><div class="p-name">Default</div><div class="p-desc">Asisten netral</div></button>
+          <button class="persona-card" data-persona="guru"><div class="p-name">Guru Killer</div><div class="p-desc">Disiplin, tegas</div></button>
+          <button class="persona-card" data-persona="pirate"><div class="p-name">Bajak Laut</div><div class="p-desc">Arrr! Harta karun</div></button>
+          <button class="persona-card" data-persona="detektif"><div class="p-name">Detektif</div><div class="p-desc">Analitis, skeptis</div></button>
+        </div></div>
+        <div class="form-group"><label class="form-label">Instruksi Kustom (Skill AI)</label><textarea id="set-custom-prompt" rows="3" placeholder="Contoh: Selalu jawab pakai bahasa Jawa halus..."></textarea></div>
         <button class="btn-primary" onclick="saveSettings()">SIMPAN PERSONALISASI</button>
       </div>
-
-      <div class="sub-view" id="sv-memori">
-        <div class="form-group">
-          <label class="form-label">Catatan Memori AI</label>
-          <textarea id="set-memory" rows="4" placeholder="AI akan mengingat catatan ini..."></textarea>
-        </div>
-        <button class="btn-primary" onclick="saveSettings()">SIMPAN MEMORI</button>
-      </div>
-
-      <div class="sub-view" id="sv-plugin">
-        <div class="form-group">
-          <label class="form-label">Tambah Plugin MCP / API Key</label>
-          <input type="text" id="mcp-input" placeholder="https://mcp-server.com/sse atau API_KEY">
-          <button class="btn-primary" style="margin-top:8px; background:var(--bg-card); color:var(--text); border:1px solid var(--border);" onclick="addMCP()">TAMBAH KONEKSI</button>
-        </div>
-        <label class="form-label" style="margin-top:20px;">Daftar Koneksi Aktif</label>
-        <div id="mcp-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-      </div>
-
+      <div class="sub-view" id="sv-memori"><div class="form-group"><label class="form-label">Catatan Memori AI</label><textarea id="set-memory" rows="4" placeholder="AI akan mengingat catatan ini..."></textarea></div><button class="btn-primary" onclick="saveSettings()">SIMPAN MEMORI</button></div>
+      <div class="sub-view" id="sv-plugin"><div class="form-group"><label class="form-label">Tambah Plugin MCP / API Key</label><input type="text" id="mcp-input" placeholder="https://mcp-server.com/sse atau API_KEY"><button class="btn-primary" style="margin-top:8px; background:var(--bg-card); color:var(--text); border:1px solid var(--border);" onclick="addMCP()">TAMBAH KONEKSI</button></div><label class="form-label" style="margin-top:20px;">Daftar Koneksi Aktif</label><div id="mcp-list" style="display:flex; flex-direction:column; gap:8px;"></div></div>
       <div class="sub-view" id="sv-tampilan">
-        <div class="form-group">
-          <label class="form-label">Mode Tema</label>
-          <div style="display:flex; gap:10px;">
-            <button class="persona-card" style="flex:1; padding:10px; text-align:center;" onclick="setThemeMode('dark')">Gelap</button>
-            <button class="persona-card" style="flex:1; padding:10px; text-align:center;" onclick="setThemeMode('light')">Terang</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Warna Aksen Neon</label>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button style="width:32px; height:32px; border-radius:50%; background:#ff0033; border:2px solid #fff;" onclick="setAccentColor('#ff0033')"></button>
-            <button style="width:32px; height:32px; border-radius:50%; background:#0088ff; border:2px solid #222;" onclick="setAccentColor('#0088ff')"></button>
-            <button style="width:32px; height:32px; border-radius:50%; background:#00cc66; border:2px solid #222;" onclick="setAccentColor('#00cc66')"></button>
-            <button style="width:32px; height:32px; border-radius:50%; background:#aa00ff; border:2px solid #222;" onclick="setAccentColor('#aa00ff')"></button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Bahasa Aplikasi</label>
-          <!-- CUSTOM SELECT BAHASA -->
-          <div class="custom-select-wrapper" id="lang-wrapper">
-            <div class="custom-select-trigger" id="lang-trigger">
-              <span id="lang-label">Bahasa Indonesia</span>
-              <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M6 9l6 6 6-6"/></svg>
-            </div>
-            <div class="custom-select-options">
-              <div class="custom-select-option" onclick="setLanguage('id')">Bahasa Indonesia</div>
-              <div class="custom-select-option" onclick="setLanguage('en')">English</div>
-            </div>
-          </div>
-        </div>
+        <div class="form-group"><label class="form-label">Mode Tema</label><div style="display:flex; gap:10px;"><button class="persona-card" style="flex:1; padding:10px; text-align:center;" onclick="setThemeMode('dark')">Gelap</button><button class="persona-card" style="flex:1; padding:10px; text-align:center;" onclick="setThemeMode('light')">Terang</button></div></div>
+        <div class="form-group"><label class="form-label">Warna Aksen Neon</label><div style="display:flex; gap:10px; flex-wrap:wrap;"><button style="width:32px; height:32px; border-radius:50%; background:#ff0033; border:2px solid #fff;" onclick="setAccentColor('#ff0033')"></button><button style="width:32px; height:32px; border-radius:50%; background:#0088ff; border:2px solid #222;" onclick="setAccentColor('#0088ff')"></button><button style="width:32px; height:32px; border-radius:50%; background:#00cc66; border:2px solid #222;" onclick="setAccentColor('#00cc66')"></button><button style="width:32px; height:32px; border-radius:50%; background:#aa00ff; border:2px solid #222;" onclick="setAccentColor('#aa00ff')"></button></div></div>
       </div>
-
     </div>
   </div>
 </div>
@@ -525,8 +356,8 @@ input:focus, textarea:focus { border-color: var(--neon); }
 <div class="modal" id="modal-global">
   <div class="modal-box" style="display:flex;flex-direction:column;height:75vh;max-height:75vh">
     <div class="modal-header"><div class="modal-title">GLOBAL CHAT</div><button class="modal-close" onclick="document.getElementById('modal-global').classList.remove('show')"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-    <div id="global-chat-box"><div style="color:#666;font-size:11px;text-align:center;padding:20px">Memuat pesan...</div></div>
-    <div class="gc-input-row" style="padding: 15px 20px; border-top:1px solid var(--border);"><input type="text" id="global-chat-input" placeholder="Ketik pesan..."><button id="btn-send-global">KIRIM</button></div>
+    <div id="global-chat-box" style="flex:1; overflow-y:auto; padding:10px;"></div>
+    <div class="gc-input-row" style="padding: 15px 20px; border-top:1px solid var(--border); display:flex; gap:8px;"><input type="text" id="global-chat-input" placeholder="Ketik pesan..." style="flex:1;"><button id="btn-send-global" style="padding:0 16px; background:var(--neon); color:#fff; border-radius:var(--radius); font-weight:bold;">KIRIM</button></div>
   </div>
 </div>
 
@@ -536,8 +367,8 @@ import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasej
 import{getFirestore,doc,getDoc,setDoc,collection,addDoc,query,orderBy,limit,onSnapshot,serverTimestamp,deleteDoc,getDocs}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const FIREBASE_CONFIG={apiKey:"AIzaSyAPx6XY8CRDrS8sxh00uNjWsymTu8jD95M",authDomain:"khai-b6e18.firebaseapp.com",projectId:"khai-b6e18",storageBucket:"khai-b6e18.firebasestorage.app",messagingSenderId:"903942429337",appId:"1:903942429337:web:9a21b3b38c7bc917be3608"};
-const WORKER_URL = "https://khaibackend.vercel.app/api/chat";
-const WA_NUMBER="6289525796082"; // Nomor WA tanpa strip
+const WORKER_URL="https://khaibackend.vercel.app/api/chat";
+const WA_NUMBER="6289525796082";
 const fbApp=initializeApp(FIREBASE_CONFIG),auth=getAuth(fbApp),db=getFirestore(fbApp);
 
 let currentUser=null,idToken=null,hist=[],busy=false;
@@ -564,32 +395,43 @@ function updateCreditUI() {
   $("credit-tier-text").textContent = tierText[usage.tier] || "FREE TIER";
   $("credit-used").textContent = usage.used;
   $("credit-limit").textContent = usage.limit;
-  
   const remaining = Math.max(0, usage.limit - usage.used);
   const percent = Math.min(100, (remaining / usage.limit) * 100);
-  
   const fill = $("credit-bar-fill");
   fill.style.width = percent + "%";
-  
-  if (percent >= 100) {
-    fill.classList.remove("not-full");
-    $("credit-status").textContent = "Kredit Penuh";
-    $("credit-status").style.color = "var(--neon)";
-  } else if (percent <= 0) {
-    fill.classList.remove("not-full");
-    $("credit-status").textContent = "Kredit Habis";
-    $("credit-status").style.color = "#ff0033";
-  } else {
-    fill.classList.add("not-full");
-    $("credit-status").textContent = "Sisa Kredit: " + remaining;
-    $("credit-status").style.color = "var(--text-dim)";
-  }
+  if (percent >= 100) { fill.classList.remove("not-full"); $("credit-status").textContent = "Kredit Penuh"; $("credit-status").style.color = "var(--neon)"; }
+  else if (percent <= 0) { fill.classList.remove("not-full"); $("credit-status").textContent = "Kredit Habis"; $("credit-status").style.color = "#ff0033"; }
+  else { fill.classList.add("not-full"); $("credit-status").textContent = "Sisa Kredit: " + remaining; $("credit-status").style.color = "var(--text-dim)"; }
 }
 
 /* UPGRADE VIA WA */
 window.upgradeWA = function() {
   const text = encodeURIComponent("Halo Admin KH AI, saya mau upgrade paket kredit. Email saya: " + (currentUser ? currentUser.email : "Belum Login"));
   window.open("https://wa.me/" + WA_NUMBER + "?text=" + text, "_blank");
+};
+
+/* CEK MODEL LOCK */
+window.checkModelAccess = function(modelVal) {
+  const tierAccess = {
+    "free": ["KH-1", "KH-2"],
+    "basic": ["KH-1", "KH-2", "KH 1.0", "KH 1.5"],
+    "pro": ["KH-1", "KH-2", "KH 1.0", "KH 1.5", "KH Plus 1.0", "KH Pro 1.0"],
+    "ultra": ["KH-1", "KH-2", "KH 1.0", "KH 1.5", "KH Plus 1.0", "KH Pro 1.0", "KH Ultra 1.0"]
+  };
+  const allowed = tierAccess[usage.tier] || tierAccess["free"];
+  if (!allowed.includes(modelVal)) {
+    let reqTier = "Basic";
+    if(modelVal === "KH Plus 1.0" || modelVal === "KH Pro 1.0") reqTier = "Pro";
+    if(modelVal === "KH Ultra 1.0") reqTier = "Ultra";
+    $("upgrade-title").textContent = "Model " + modelVal + " Terkunci";
+    $("upgrade-desc").innerHTML = "Model ini membutuhkan tier <b>" + reqTier + "</b> atau lebih tinggi. Tier kamu saat ini: <b>" + usage.tier.toUpperCase() + "</b>.<br><br>Silakan hubungi Admin untuk melakukan upgrade.";
+    const waBtn = $("upgrade-wa-btn");
+    const text = encodeURIComponent("Halo Admin, saya mau upgrade tier ke " + reqTier + " untuk membuka model " + modelVal + ". Email: " + currentUser.email);
+    waBtn.href = "https://wa.me/" + WA_NUMBER + "?text=" + text;
+    $("modal-upgrade").classList.add("show");
+    return false;
+  }
+  return true;
 };
 
 /* SIDEBAR */
@@ -608,69 +450,47 @@ ddSelected.addEventListener("click",function(e){
   ddMenu.classList.toggle("show");
 });
 document.addEventListener("click",e=>{if(!ddContainer.contains(e.target)&&!ddMenu.contains(e.target))ddMenu.classList.remove("show");});
+
 ddMenu.querySelectorAll(".dropdown-item").forEach(item=>{
   item.addEventListener("click",()=>{
-    const val=item.dataset.val;ddSelected.textContent=val;modelSelect.value=val;
-    ddMenu.querySelectorAll(".dropdown-item").forEach(i=>i.classList.remove("active"));item.classList.add("active");
-    ddMenu.classList.remove("show");showToast("Model: "+val);
+    const val=item.dataset.val;
+    if (!checkModelAccess(val)) {
+      ddMenu.classList.remove("show");
+      return;
+    }
+    ddSelected.textContent=val;
+    modelSelect.value=val;
+    ddMenu.querySelectorAll(".dropdown-item").forEach(i=>i.classList.remove("active"));
+    item.classList.add("active");
+    ddMenu.classList.remove("show");
+    showToast("Model: "+val);
   });
 });
 
-/* CUSTOM SELECT BAHASA */
-const langWrapper = $("lang-wrapper");
-$("lang-trigger").addEventListener("click", (e) => {
-  e.stopPropagation();
-  langWrapper.classList.toggle("open");
-});
-document.addEventListener("click", (e) => {
-  if(!langWrapper.contains(e.target)) langWrapper.classList.remove("open");
-});
-
-/* TEMA & TAMPILAN */
+/* TEMA */
 function applyTheme(){
   if(settings.theme==="light") document.body.classList.add("light-mode");
   else document.body.classList.remove("light-mode");
-  
-  // Set Warna Utama
   document.documentElement.style.setProperty('--neon', settings.accent);
-  
-  // Set Warna Glow untuk Floating AI
   const hex=settings.accent.replace('#','');
   const r=parseInt(hex.substr(0,2),16);
   const g=parseInt(hex.substr(2,2),16);
   const b=parseInt(hex.substr(4,2),16);
-  
-  // Glow agak transparan (rgba)
   document.documentElement.style.setProperty('--neon-glow', `rgba(${r}, ${g}, ${b}, 0.6)`);
-  
-  // Set Warna Dim (lebih gelap 50%)
   const dr=Math.floor(r*0.5); const dg=Math.floor(g*0.5); const db=Math.floor(b*0.5);
   document.documentElement.style.setProperty('--neon-dim', '#'+dr.toString(16).padStart(2,'0')+dg.toString(16).padStart(2,'0')+db.toString(16).padStart(2,'0'));
 }
 window.setThemeMode=function(mode){ settings.theme=mode; applyTheme(); saveSettings(true); };
 window.setAccentColor=function(color){ settings.accent=color; applyTheme(); saveSettings(true); showToast("Warna diubah"); };
-window.setLanguage=function(lang){ 
-  settings.language=lang; 
-  saveSettings(true); 
-  $("lang-label").textContent = lang === "id" ? "Bahasa Indonesia" : "English";
-  langWrapper.classList.remove("open");
-  showToast("Bahasa diubah"); 
-};
 
-/* SETTINGS UI LOGIC */
+/* SETTINGS UI */
 window.switchSettingsView=function(view){
   document.querySelectorAll(".sub-view").forEach(el=>el.classList.remove("active"));
   $("sv-"+view).classList.add("active");
   const title=$("settings-title");
   const backBtn=$("btn-settings-back");
-  
-  if(view==="main"){
-    title.textContent="PENGATURAN"; backBtn.style.display="none";
-  } else {
-    backBtn.style.display="flex";
-    const titles={personalisasi:"PERSONALISASI",memori:"MEMORI",plugin:"PLUGIN MCP",tampilan:"TAMPILAN",tier:"TIER & KREDIT"};
-    title.textContent=titles[view]||"PENGATURAN";
-  }
+  if(view==="main"){ title.textContent="PENGATURAN"; backBtn.style.display="none"; }
+  else { backBtn.style.display="flex"; const titles={personalisasi:"PERSONALISASI",memori:"MEMORI",plugin:"PLUGIN MCP",tampilan:"TAMPILAN",tier:"TIER & KREDIT"}; title.textContent=titles[view]||"PENGATURAN"; }
   if(view==="plugin") renderMCPs();
   if(view==="tier") updateCreditUI();
 };
@@ -686,8 +506,6 @@ async function loadSettings(){
   updatePersonaIndicator();
   syncPersonaUI();
   updateHeroGreeting();
-  
-  $("lang-label").textContent = settings.language === "id" ? "Bahasa Indonesia" : "English";
 }
 function updateHeroGreeting(){
   const h=$("hero-greeting");
@@ -726,7 +544,7 @@ $("btn-settings-top").addEventListener("click",openSettings);
 document.querySelectorAll("#persona-grid .persona-card").forEach(card=>{card.addEventListener("click",()=>{settings.persona=card.dataset.persona;syncPersonaUI();});});
 document.querySelectorAll(".sidebar-btn[data-persona]").forEach(btn=>{btn.addEventListener("click",async()=>{settings.persona=btn.dataset.persona;syncPersonaUI();updatePersonaIndicator();if(currentUser){try{await setDoc(doc(db,"settings",currentUser.email),settings,{merge:true});}catch(e){}}showToast("Persona: "+btn.querySelector(".label").textContent);closeSidebar();});});
 
-/* MCP PLUGINS LOGIC */
+/* MCP PLUGINS */
 window.addMCP=function(){
   const val=$("mcp-input").value.trim();
   if(!val) return;
@@ -785,12 +603,8 @@ async function loadHistory(){
       if(time >= today) dateLabel="Hari ini";
       else if(time >= today-86400000) dateLabel="Kemarin";
       else dateLabel=d.toLocaleDateString('id-ID', {day:'numeric',month:'short'});
-
       el.innerHTML=`<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <div style="display:flex;flex-direction:column;overflow:hidden;">
-          <span>${s.title || "Chat Baru"}</span>
-          <span style="font-size:9px;color:var(--text-dim);margin-top:2px;">${dateLabel}</span>
-        </div>`;
+        <div style="display:flex;flex-direction:column;overflow:hidden;"><span>${s.title || "Chat Baru"}</span><span style="font-size:9px;color:var(--text-dim);margin-top:2px;">${dateLabel}</span></div>`;
       el.onclick=()=>loadSession(s.id, s.messages || []);
       list.appendChild(el);
     });
@@ -899,7 +713,6 @@ function renderZipCard(zipData) {
   const card = document.createElement("div");
   card.className = "zip-card";
   const fileCount = zipData.files ? zipData.files.length : 0;
-  
   card.innerHTML = `
     <div class="zip-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
     <div class="zip-info">
@@ -944,7 +757,6 @@ function processAIMessage(text, thinkingText, sources) {
   try {
     const clean = text.replace(/```[a-z]*\s*/gi, "").replace(/```/g, "").trim();
     const json = JSON.parse(clean);
-    
     if (json.type === "quiz" && json.question) {
       el.classList.add("quiz");
       const q = document.createElement("div"); q.className = "quiz-question"; q.textContent = "KUIS: " + json.question; el.appendChild(q);
@@ -1013,11 +825,8 @@ async function callChatAPI(userText){
     if(res.status===429){
       hist.pop();
       const errData = await res.json();
-      
-      // Tampilkan Custom Modal / Toast
       showToast("Kredit habis! Mengarahkan ke WhatsApp...");
       setTimeout(() => { upgradeWA(); }, 1500);
-      
       return{error: errData.error || "Kredit habis."};
     }
     if(res.status===401){hist.pop();await signOut(auth);window.location.href="login.html";return{error:"Sesi berakhir"};}
@@ -1131,13 +940,7 @@ $("global-chat-input").addEventListener("keydown",e=>{if(e.key==="Enter"){e.prev
 onAuthStateChanged(auth,async u=>{
   if(u){
     currentUser=u; try{idToken=await u.getIdToken();}catch(e){}
-    
-    if(!localStorage.getItem('kh_onboard')) {
-      $("onboarding").classList.add("show");
-    }
-
     await loadSettings(); await loadHistory();
-    
     try {
       const userDoc = await getDoc(doc(db, "users", u.email));
       if (userDoc.exists()) {
@@ -1147,7 +950,6 @@ onAuthStateChanged(auth,async u=>{
         updateCreditUI();
       }
     } catch(e) { console.warn(e); }
-
     updatePersonaIndicator();updateSendBtn();
   } else {window.location.href="login.html";}
 });
