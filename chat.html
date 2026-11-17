@@ -336,6 +336,7 @@ pre{padding:14px;overflow-x:auto;font-family:'Courier New',monospace;font-size:1
     <div class="disc">KH AI dapat membuat kesalahan. Periksa info penting.</div>
   </footer>
 </div>
+<script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,collection,addDoc,query,orderBy,limit,onSnapshot,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -925,7 +926,7 @@ onAuthStateChanged(auth,async(u)=>{
       if(d.exists())userSettings=Object.assign(userSettings,d.data());
       const userDoc=await getDoc(doc(db,"users",u.email));
       if(userDoc.exists()){usage.used=userDoc.data().used||0;usage.limit=userDoc.data().limit||100;usage.tier=userDoc.data().tier||"free";updateUsage();updateCreditUI();}
-    }catch(e){}
+        }catch(e){}
     inp.focus();
   }else{window.location.href="login.html";}
 });
